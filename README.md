@@ -1,1 +1,1 @@
-# aws-epsi
+# demo-aws
