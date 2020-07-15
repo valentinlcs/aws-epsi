@@ -77,3 +77,37 @@ resource "aws_route_table_association" "b" {
   subnet_id      = aws_subnet.public-b.id
   route_table_id = aws_route_table.r.id
 }
+
+resource "tls_private_key" "example" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "ec2-key-tf"
+  public_key = tls_private_key.example.public_key_openssh
+}
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical 
+}
+
+output "private-key" {
+  value = tls_private_key.example.private_key_pem
+}
+
+output "ami-value" {
+  value = data.aws_ami.ubuntu.image_id
+}
