@@ -1,6 +1,6 @@
 1 VPC
 
-1 Subnet publique
+2 Subnets publiques
 
 1 Internet Gateway
 
